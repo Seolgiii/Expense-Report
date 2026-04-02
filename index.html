@@ -3,250 +3,525 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>지출결의서 작성</title>
+  <title>지출결의서</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg: #f3f4f6;
+      --paper: #ffffff;
+      --line: #d9d9de;
+      --line-dark: #1f2937;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #111827;
+      --accent-soft: #f9fafb;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      max-width: 1200px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 20px;
-      background: #f5f7fb;
-      color: #222;
+      padding: 20px 16px 40px;
     }
 
-    .wrap {
-      background: #fff;
-      border: 1px solid #ddd;
-      padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    .paper {
+      background: var(--paper);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+      padding: 28px;
     }
 
-    h1 {
+    .title {
+      margin: 0;
       text-align: center;
-      margin-bottom: 24px;
-      letter-spacing: 2px;
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      line-height: 1.15;
+    }
+
+    .section {
+      margin-top: 34px;
     }
 
     .section-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 28px 0 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #333;
+      margin: 0 0 18px;
+      padding-bottom: 10px;
+      font-size: 30px;
+      font-weight: 800;
+      border-bottom: 4px solid var(--line-dark);
+      letter-spacing: -0.02em;
     }
 
-    table {
+    .basic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-span-2 {
+      grid-column: span 2;
+    }
+
+    .label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .help {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: -2px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font-family: inherit;
+    }
+
+    input,
+    select,
+    textarea {
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 14px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    th {
-      background: #f0f0f0;
-      width: 140px;
-      white-space: nowrap;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 8px;
-      border: 1px solid #bbb;
-      font-size: 14px;
+      min-height: 52px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
       background: #fff;
+      padding: 14px 16px;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.06);
+    }
+
+    input[readonly] {
+      background: #f9fafb;
+      color: #374151;
+      cursor: default;
     }
 
     textarea {
-      min-height: 90px;
+      min-height: 150px;
       resize: vertical;
     }
 
-    .detail-table th,
-    .detail-table td {
-      font-size: 14px;
+    .detail-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .detail-table th {
-      background: #f7f7f7;
+    .detail-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: #fcfcfd;
+    }
+
+    .detail-card-title {
+      margin: 0 0 14px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
     }
 
     .total-box {
-      margin-top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: right;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .total-label {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .total-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
     }
 
     .submit-area {
-      margin-top: 24px;
-      text-align: center;
+      margin-top: 30px;
     }
 
-    button {
-      padding: 12px 28px;
-      font-size: 16px;
+    .submit-btn {
+      width: 100%;
+      min-height: 56px;
       border: none;
-      background: #1f4ed8;
-      color: white;
+      border-radius: 16px;
+      background: #111827;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
       cursor: pointer;
-      border-radius: 6px;
+      transition: opacity 0.15s ease, transform 0.05s ease;
     }
 
-    button:disabled {
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .submit-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
 
     .message {
-      margin-top: 16px;
+      margin-top: 14px;
       text-align: center;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 700;
     }
 
-    .small {
-      font-size: 12px;
-      color: #666;
+    .guide {
       margin-top: 8px;
       text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    iframe {
+      display: none;
     }
 
     @media (max-width: 900px) {
-      body {
-        padding: 10px;
+      .paper {
+        padding: 22px 16px;
+        border-radius: 20px;
       }
 
-      .wrap {
-        padding: 12px;
+      .title {
+        font-size: 34px;
+        letter-spacing: 0.14em;
       }
 
-      table, thead, tbody, tr, th, td {
-        font-size: 13px;
+      .section {
+        margin-top: 26px;
+      }
+
+      .section-title {
+        font-size: 22px;
+        padding-bottom: 8px;
+        border-bottom-width: 3px;
+      }
+
+      .basic-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-span-2 {
+        grid-column: span 1;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .detail-grid .field:last-child {
+        grid-column: span 2;
+      }
+
+      .total-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .total-value {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding: 12px 10px 30px;
+      }
+
+      .paper {
+        padding: 18px 12px;
+      }
+
+      .title {
+        font-size: 28px;
+        letter-spacing: 0.1em;
+      }
+
+      .section-title {
+        font-size: 18px;
+      }
+
+      .label {
+        font-size: 14px;
+      }
+
+      input,
+      select,
+      textarea {
+        min-height: 50px;
+        padding: 13px 14px;
+        font-size: 16px;
+      }
+
+      .detail-card {
+        padding: 14px;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-grid .field:last-child {
+        grid-column: span 1;
+      }
+
+      .submit-btn {
+        min-height: 54px;
+        font-size: 17px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>지 출 결 의 서</h1>
+  <div class="page">
+    <div class="paper">
+      <h1 class="title">지출결의서</h1>
 
-    <form id="expenseForm" method="POST" target="hiddenFrame">
-      <div class="section-title">기본 정보</div>
-      <table>
-        <tr>
-          <th>작성일</th>
-          <td><input type="date" name="writeDate" required></td>
-          <th>지급일</th>
-          <td><input type="date" name="payDate" required></td>
-        </tr>
-        <tr>
-          <th>신청자</th>
-          <td><input type="text" name="applicant" required></td>
-          <th>소속</th>
-          <td><input type="text" name="department"></td>
-        </tr>
-        <tr>
-          <th>직급</th>
-          <td><input type="text" name="position"></td>
-          <th>담당자</th>
-          <td><input type="text" name="manager"></td>
-        </tr>
-        <tr>
-          <th>연락처</th>
-          <td><input type="text" name="contact"></td>
-          <th>출금계좌</th>
-          <td><input type="text" name="accountOut"></td>
-        </tr>
-        <tr>
-          <th>건명</th>
-          <td colspan="3"><input type="text" name="title" required></td>
-        </tr>
-        <tr>
-          <th>법인카드 사용 여부</th>
-          <td>
-            <select name="corporateCard">
-              <option value="">선택</option>
-              <option value="유">유</option>
-              <option value="무">무</option>
-            </select>
-          </td>
-          <th>비고</th>
-          <td><input type="text" name="note"></td>
-        </tr>
-      </table>
+      <form id="expenseForm" method="POST" target="hiddenFrame">
+        <input type="hidden" name="manager" value="">
+        <input type="hidden" name="contact" value="">
+        <input type="hidden" name="accountOut" value="">
+        <input type="hidden" name="note" value="">
 
-      <div class="section-title">지급 내역 (최대 3줄 고정)</div>
-      <table class="detail-table">
-        <thead>
-          <tr>
-            <th>거래처</th>
-            <th>적요</th>
-            <th>금액</th>
-            <th>예금주</th>
-            <th>계좌번호</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><input type="text" name="vendor1"></td>
-            <td><input type="text" name="description1"></td>
-            <td><input type="number" name="amount1" class="amount" min="0" step="1"></td>
-            <td><input type="text" name="accountHolder1"></td>
-            <td><input type="text" name="accountNumber1"></td>
-          </tr>
-          <tr>
-            <td><input type="text" name="vendor2"></td>
-            <td><input type="text" name="description2"></td>
-            <td><input type="number" name="amount2" class="amount" min="0" step="1"></td>
-            <td><input type="text" name="accountHolder2"></td>
-            <td><input type="text" name="accountNumber2"></td>
-          </tr>
-          <tr>
-            <td><input type="text" name="vendor3"></td>
-            <td><input type="text" name="description3"></td>
-            <td><input type="number" name="amount3" class="amount" min="0" step="1"></td>
-            <td><input type="text" name="accountHolder3"></td>
-            <td><input type="text" name="accountNumber3"></td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="section">
+          <h2 class="section-title">기본 정보</h2>
 
-      <div class="total-box">합계 금액: ₩ <span id="totalAmount">0</span></div>
+          <div class="basic-grid">
+            <div class="field">
+              <label class="label" for="writeDate">작성일</label>
+              <input type="date" id="writeDate" name="writeDate" readonly>
+              <div class="help">작성일은 접속 당일로 자동 입력됩니다.</div>
+            </div>
 
-      <div class="section-title">기타 사항</div>
-      <table>
-        <tr>
-          <th>기타사항</th>
-          <td><textarea name="etc"></textarea></td>
-        </tr>
-      </table>
+            <div class="field">
+              <label class="label" for="payDate">지출일</label>
+              <input type="date" id="payDate" name="payDate" required>
+            </div>
 
-      <div class="submit-area">
-        <button type="submit" id="submitBtn">제출하기</button>
-        <div class="message" id="message"></div>
-        <div class="small">제출 후 2~3초 뒤 시트에 새 행이 생기는지 확인해주세요.</div>
-      </div>
-    </form>
+            <div class="field">
+              <label class="label" for="applicant">신청자</label>
+              <input type="text" id="applicant" name="applicant" required>
+            </div>
 
-    <iframe name="hiddenFrame" style="display:none;"></iframe>
+            <div class="field">
+              <label class="label" for="department">소속</label>
+              <select id="department" name="department" required>
+                <option value="">선택</option>
+                <option value="한라에스앤에프">한라에스앤에프</option>
+                <option value="제주에스에프">제주에스에프</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label" for="position">직급</label>
+              <input type="text" id="position" name="position">
+            </div>
+
+            <div class="field field-span-2">
+              <label class="label" for="title">건명</label>
+              <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="field">
+              <label class="label" for="corporateCard">법인카드 사용 여부</label>
+              <select id="corporateCard" name="corporateCard">
+                <option value="">선택</option>
+                <option value="유">유</option>
+                <option value="무">무</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">지출 내역</h2>
+
+          <div class="detail-rows">
+            <div class="detail-card">
+              <h3 class="detail-card-title">1행</h3>
+              <div class="detail-grid">
+                <div class="field">
+                  <label class="label" for="vendor1">사용처</label>
+                  <input type="text" id="vendor1" name="vendor1">
+                </div>
+                <div class="field">
+                  <label class="label" for="description1">적요</label>
+                  <input type="text" id="description1" name="description1">
+                </div>
+                <div class="field">
+                  <label class="label" for="amount1">금액</label>
+                  <input type="number" id="amount1" name="amount1" class="amount" min="0" step="1" inputmode="numeric">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountHolder1">은행명</label>
+                  <input type="text" id="accountHolder1" name="accountHolder1">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountNumber1">계좌번호</label>
+                  <input type="text" id="accountNumber1" name="accountNumber1">
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <h3 class="detail-card-title">2행</h3>
+              <div class="detail-grid">
+                <div class="field">
+                  <label class="label" for="vendor2">사용처</label>
+                  <input type="text" id="vendor2" name="vendor2">
+                </div>
+                <div class="field">
+                  <label class="label" for="description2">적요</label>
+                  <input type="text" id="description2" name="description2">
+                </div>
+                <div class="field">
+                  <label class="label" for="amount2">금액</label>
+                  <input type="number" id="amount2" name="amount2" class="amount" min="0" step="1" inputmode="numeric">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountHolder2">은행명</label>
+                  <input type="text" id="accountHolder2" name="accountHolder2">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountNumber2">계좌번호</label>
+                  <input type="text" id="accountNumber2" name="accountNumber2">
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <h3 class="detail-card-title">3행</h3>
+              <div class="detail-grid">
+                <div class="field">
+                  <label class="label" for="vendor3">사용처</label>
+                  <input type="text" id="vendor3" name="vendor3">
+                </div>
+                <div class="field">
+                  <label class="label" for="description3">적요</label>
+                  <input type="text" id="description3" name="description3">
+                </div>
+                <div class="field">
+                  <label class="label" for="amount3">금액</label>
+                  <input type="number" id="amount3" name="amount3" class="amount" min="0" step="1" inputmode="numeric">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountHolder3">은행명</label>
+                  <input type="text" id="accountHolder3" name="accountHolder3">
+                </div>
+                <div class="field">
+                  <label class="label" for="accountNumber3">계좌번호</label>
+                  <input type="text" id="accountNumber3" name="accountNumber3">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="total-box">
+            <div class="total-label">합계 금액</div>
+            <div class="total-value">₩ <span id="totalAmount">0</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">비고</h2>
+          <div class="field">
+            <textarea name="etc" id="etc" placeholder="필요한 내용을 입력해 주세요."></textarea>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <button type="submit" class="submit-btn" id="submitBtn">제출</button>
+          <div class="message" id="message"></div>
+          <div class="guide">제출 후 2~3초 뒤 시트에 정상 저장되었는지 확인해 주세요.</div>
+        </div>
+      </form>
+
+      <iframe name="hiddenFrame"></iframe>
+    </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec";
+    const SCRIPT_URL = "여기에_네_exec_URL_붙여넣기";
 
     const form = document.getElementById("expenseForm");
-    const message = document.getElementById("message");
     const submitBtn = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
     const amountInputs = document.querySelectorAll(".amount");
     const totalAmountEl = document.getElementById("totalAmount");
+    const writeDateInput = document.getElementById("writeDate");
 
     form.action = SCRIPT_URL;
+
+    function getTodayLocalDate() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const local = new Date(now.getTime() - offset * 60000);
+      return local.toISOString().split("T")[0];
+    }
+
+    function setTodayWriteDate() {
+      writeDateInput.value = getTodayLocalDate();
+    }
 
     function formatNumber(num) {
       return Number(num || 0).toLocaleString("ko-KR");
@@ -254,37 +529,41 @@
 
     function updateTotal() {
       let total = 0;
-      amountInputs.forEach(input => {
+      amountInputs.forEach((input) => {
         total += Number(input.value || 0);
       });
       totalAmountEl.textContent = formatNumber(total);
     }
 
-    amountInputs.forEach(input => {
+    amountInputs.forEach((input) => {
       input.addEventListener("input", updateTotal);
     });
 
     form.addEventListener("submit", function (e) {
-      if (SCRIPT_URL.includes("여기에_네_exec_URL_붙여넣기")) {
+      if (SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec")) {
         e.preventDefault();
         message.style.color = "red";
         message.textContent = "웹앱 URL을 먼저 넣어줘.";
         return;
       }
 
+      setTodayWriteDate();
+
       submitBtn.disabled = true;
-      message.style.color = "#111";
-      message.textContent = "제출 중...";
+      message.style.color = "#111827";
+      message.textContent = "제출 중";
 
       setTimeout(() => {
         submitBtn.disabled = false;
         message.style.color = "green";
         message.textContent = "제출 요청 완료.";
         form.reset();
+        setTodayWriteDate();
         updateTotal();
       }, 2000);
     });
 
+    setTodayWriteDate();
     updateTotal();
   </script>
 </body>
