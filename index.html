@@ -99,14 +99,15 @@
       color: var(--muted);
       margin-top: -2px;
     }
-input,
-select,
-textarea,
-button {
-  font-family: inherit;
-  -webkit-appearance: none;
-  appearance: none;
-}
+
+    input,
+    select,
+    textarea,
+    button {
+      font-family: inherit;
+      -webkit-appearance: none;
+      appearance: none;
+    }
 
     input,
     select,
@@ -120,7 +121,6 @@ button {
       font-size: 16px;
       color: var(--text);
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     input:focus,
@@ -204,23 +204,6 @@ button {
       font-size: 18px;
       font-weight: 800;
       cursor: pointer;
-      transition: opacity 0.15s ease, transform 0.05s ease;
-    }
-
-    .submit-btn:active {
-      transform: translateY(1px);
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .message {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
     }
 
     .guide {
@@ -228,10 +211,6 @@ button {
       text-align: center;
       font-size: 12px;
       color: var(--muted);
-    }
-
-    iframe {
-      display: none;
     }
 
     @media (max-width: 900px) {
@@ -335,7 +314,7 @@ button {
     <div class="paper">
       <h1 class="title">지출결의서</h1>
 
-      <form id="expenseForm">
+      <form action="https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec" method="POST">
         <div class="section">
           <h2 class="section-title">기본 정보</h2>
 
@@ -488,93 +467,47 @@ button {
         </div>
 
         <div class="submit-area">
-          <button type="submit" class="submit-btn" id="submitBtn">제출</button>
-          <div class="message" id="message"></div>
-          <div class="guide">제출 후 2~3초 뒤 시트에 정상 저장되었는지 확인해 주세요.</div>
+          <button type="submit" class="submit-btn">제출</button>
+          <div class="guide">제출 후 접수 완료 페이지가 뜨면 정상입니다.</div>
         </div>
       </form>
-
     </div>
   </div>
 
   <script>
-  const SCRIPT_URL = "여기에_네_exec_URL_붙여넣기";
+    const amountInputs = document.querySelectorAll(".amount");
+    const totalAmountEl = document.getElementById("totalAmount");
+    const writeDateInput = document.getElementById("writeDate");
 
-  const form = document.getElementById("expenseForm");
-  const submitBtn = document.getElementById("submitBtn");
-  const message = document.getElementById("message");
-  const amountInputs = document.querySelectorAll(".amount");
-  const totalAmountEl = document.getElementById("totalAmount");
-  const writeDateInput = document.getElementById("writeDate");
-
-  function getTodayLocalDate() {
-    const now = new Date();
-    const offset = now.getTimezoneOffset();
-    const local = new Date(now.getTime() - offset * 60000);
-    return local.toISOString().split("T")[0];
-  }
-
-  function setTodayWriteDate() {
-    writeDateInput.value = getTodayLocalDate();
-  }
-
-  function formatNumber(num) {
-    return Number(num || 0).toLocaleString("ko-KR");
-  }
-
-  function updateTotal() {
-    let total = 0;
-    amountInputs.forEach((input) => {
-      total += Number(input.value || 0);
-    });
-    totalAmountEl.textContent = formatNumber(total);
-  }
-
-  amountInputs.forEach((input) => {
-    input.addEventListener("input", updateTotal);
-  });
-
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    if (SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec")) {
-      message.style.color = "red";
-      message.textContent = "웹앱 URL을 먼저 넣어줘.";
-      return;
+    function getTodayLocalDate() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const local = new Date(now.getTime() - offset * 60000);
+      return local.toISOString().split("T")[0];
     }
+
+    function setTodayWriteDate() {
+      writeDateInput.value = getTodayLocalDate();
+    }
+
+    function formatNumber(num) {
+      return Number(num || 0).toLocaleString("ko-KR");
+    }
+
+    function updateTotal() {
+      let total = 0;
+      amountInputs.forEach((input) => {
+        total += Number(input.value || 0);
+      });
+      totalAmountEl.textContent = formatNumber(total);
+    }
+
+    amountInputs.forEach((input) => {
+      input.addEventListener("input", updateTotal);
+    });
 
     setTodayWriteDate();
-
-    submitBtn.disabled = true;
-    message.style.color = "#111827";
-    message.textContent = "제출 중...";
-
-    try {
-      const formData = new FormData(form);
-      const body = new URLSearchParams(formData);
-
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: body
-      });
-
-      message.style.color = "green";
-      message.textContent = "제출 요청 완료. 시트 저장 여부를 확인해줘.";
-      form.reset();
-      setTodayWriteDate();
-      updateTotal();
-    } catch (error) {
-      console.error(error);
-      message.style.color = "red";
-      message.textContent = "제출 중 오류가 발생했어.";
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-
-  setTodayWriteDate();
-  updateTotal();
-</script>
+    updateTotal();
+  </script>
 </body>
 </html>
