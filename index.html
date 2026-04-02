@@ -17,9 +17,6 @@
       --line-dark: #1f2937;
       --text: #111827;
       --muted: #6b7280;
-      --accent: #111827;
-      --accent-soft: #f9fafb;
-      --radius: 18px;
     }
 
     * {
@@ -46,7 +43,7 @@
     }
 
     .paper {
-      background: var(--paper);
+      background: #fff;
       border: 1px solid #e5e7eb;
       border-radius: 24px;
       box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
@@ -338,11 +335,6 @@
       <h1 class="title">지출결의서</h1>
 
       <form id="expenseForm" method="POST" target="hiddenFrame">
-        <input type="hidden" name="manager" value="">
-        <input type="hidden" name="contact" value="">
-        <input type="hidden" name="accountOut" value="">
-        <input type="hidden" name="note" value="">
-
         <div class="section">
           <h2 class="section-title">기본 정보</h2>
 
@@ -375,6 +367,11 @@
             <div class="field">
               <label class="label" for="position">직급</label>
               <input type="text" id="position" name="position">
+            </div>
+
+            <div class="field">
+              <label class="label" for="manager">담당자</label>
+              <input type="text" id="manager" name="manager">
             </div>
 
             <div class="field field-span-2">
@@ -551,12 +548,12 @@
 
       submitBtn.disabled = true;
       message.style.color = "#111827";
-      message.textContent = "제출 중";
+      message.textContent = "제출 중...";
 
       setTimeout(() => {
         submitBtn.disabled = false;
         message.style.color = "green";
-        message.textContent = "제출 요청 완료.";
+        message.textContent = "제출 요청 완료. 시트 저장 여부를 확인해줘.";
         form.reset();
         setTodayWriteDate();
         updateTotal();
