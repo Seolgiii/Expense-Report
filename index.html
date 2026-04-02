@@ -99,13 +99,14 @@
       color: var(--muted);
       margin-top: -2px;
     }
-
-    input,
-    select,
-    textarea,
-    button {
-      font-family: inherit;
-    }
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
 
     input,
     select,
@@ -334,7 +335,7 @@
     <div class="paper">
       <h1 class="title">지출결의서</h1>
 
-      <form id="expenseForm" method="POST" target="hiddenFrame">
+      <form id="expenseForm">
         <div class="section">
           <h2 class="section-title">기본 정보</h2>
 
@@ -493,75 +494,87 @@
         </div>
       </form>
 
-      <iframe name="hiddenFrame"></iframe>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "여기에_네_exec_URL_붙여넣기";
+  const SCRIPT_URL = "여기에_네_exec_URL_붙여넣기";
 
-    const form = document.getElementById("expenseForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const message = document.getElementById("message");
-    const amountInputs = document.querySelectorAll(".amount");
-    const totalAmountEl = document.getElementById("totalAmount");
-    const writeDateInput = document.getElementById("writeDate");
+  const form = document.getElementById("expenseForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const message = document.getElementById("message");
+  const amountInputs = document.querySelectorAll(".amount");
+  const totalAmountEl = document.getElementById("totalAmount");
+  const writeDateInput = document.getElementById("writeDate");
 
-    form.action = SCRIPT_URL;
+  function getTodayLocalDate() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const local = new Date(now.getTime() - offset * 60000);
+    return local.toISOString().split("T")[0];
+  }
 
-    function getTodayLocalDate() {
-      const now = new Date();
-      const offset = now.getTimezoneOffset();
-      const local = new Date(now.getTime() - offset * 60000);
-      return local.toISOString().split("T")[0];
-    }
+  function setTodayWriteDate() {
+    writeDateInput.value = getTodayLocalDate();
+  }
 
-    function setTodayWriteDate() {
-      writeDateInput.value = getTodayLocalDate();
-    }
+  function formatNumber(num) {
+    return Number(num || 0).toLocaleString("ko-KR");
+  }
 
-    function formatNumber(num) {
-      return Number(num || 0).toLocaleString("ko-KR");
-    }
-
-    function updateTotal() {
-      let total = 0;
-      amountInputs.forEach((input) => {
-        total += Number(input.value || 0);
-      });
-      totalAmountEl.textContent = formatNumber(total);
-    }
-
+  function updateTotal() {
+    let total = 0;
     amountInputs.forEach((input) => {
-      input.addEventListener("input", updateTotal);
+      total += Number(input.value || 0);
     });
+    totalAmountEl.textContent = formatNumber(total);
+  }
 
-    form.addEventListener("submit", function (e) {
-      if (SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec")) {
-        e.preventDefault();
-        message.style.color = "red";
-        message.textContent = "웹앱 URL을 먼저 넣어줘.";
-        return;
-      }
+  amountInputs.forEach((input) => {
+    input.addEventListener("input", updateTotal);
+  });
 
-      setTodayWriteDate();
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-      submitBtn.disabled = true;
-      message.style.color = "#111827";
-      message.textContent = "제출 중...";
-
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        message.style.color = "green";
-        message.textContent = "제출 요청 완료. 시트 저장 여부를 확인해줘.";
-        form.reset();
-        setTodayWriteDate();
-        updateTotal();
-      }, 2000);
-    });
+    if (SCRIPT_URL.includes("여기에_네_exec_URL_붙여넣기")) {
+      message.style.color = "red";
+      message.textContent = "웹앱 URL을 먼저 넣어줘.";
+      return;
+    }
 
     setTodayWriteDate();
-    updateTotal();
-  </script>
+
+    submitBtn.disabled = true;
+    message.style.color = "#111827";
+    message.textContent = "제출 중...";
+
+    try {
+      const formData = new FormData(form);
+      const body = new URLSearchParams(formData);
+
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: body
+      });
+
+      message.style.color = "green";
+      message.textContent = "제출 요청 완료. 시트 저장 여부를 확인해줘.";
+      form.reset();
+      setTodayWriteDate();
+      updateTotal();
+    } catch (error) {
+      console.error(error);
+      message.style.color = "red";
+      message.textContent = "제출 중 오류가 발생했어.";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  setTodayWriteDate();
+  updateTotal();
+</script>
 </body>
 </html>
