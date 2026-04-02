@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지출결의서 작성</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    .wrap {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f0f0f0;
+      width: 140px;
+      white-space: nowrap;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      border: 1px solid #bbb;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .detail-table th,
+    .detail-table td {
+      font-size: 14px;
+    }
+
+    .detail-table th {
+      background: #f7f7f7;
+    }
+
+    .total-box {
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .submit-area {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      background: #1f4ed8;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 16px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 10px;
+      }
+
+      .wrap {
+        padding: 12px;
+      }
+
+      table, thead, tbody, tr, th, td {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>지 출 결 의 서</h1>
+
+    <form id="expenseForm" method="POST" target="hiddenFrame">
+      <div class="section-title">기본 정보</div>
+      <table>
+        <tr>
+          <th>작성일</th>
+          <td><input type="date" name="writeDate" required></td>
+          <th>지급일</th>
+          <td><input type="date" name="payDate" required></td>
+        </tr>
+        <tr>
+          <th>신청자</th>
+          <td><input type="text" name="applicant" required></td>
+          <th>소속</th>
+          <td><input type="text" name="department"></td>
+        </tr>
+        <tr>
+          <th>직급</th>
+          <td><input type="text" name="position"></td>
+          <th>담당자</th>
+          <td><input type="text" name="manager"></td>
+        </tr>
+        <tr>
+          <th>연락처</th>
+          <td><input type="text" name="contact"></td>
+          <th>출금계좌</th>
+          <td><input type="text" name="accountOut"></td>
+        </tr>
+        <tr>
+          <th>건명</th>
+          <td colspan="3"><input type="text" name="title" required></td>
+        </tr>
+        <tr>
+          <th>법인카드 사용 여부</th>
+          <td>
+            <select name="corporateCard">
+              <option value="">선택</option>
+              <option value="유">유</option>
+              <option value="무">무</option>
+            </select>
+          </td>
+          <th>비고</th>
+          <td><input type="text" name="note"></td>
+        </tr>
+      </table>
+
+      <div class="section-title">지급 내역 (최대 3줄 고정)</div>
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>거래처</th>
+            <th>적요</th>
+            <th>금액</th>
+            <th>예금주</th>
+            <th>계좌번호</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" name="vendor1"></td>
+            <td><input type="text" name="description1"></td>
+            <td><input type="number" name="amount1" class="amount" min="0" step="1"></td>
+            <td><input type="text" name="accountHolder1"></td>
+            <td><input type="text" name="accountNumber1"></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="vendor2"></td>
+            <td><input type="text" name="description2"></td>
+            <td><input type="number" name="amount2" class="amount" min="0" step="1"></td>
+            <td><input type="text" name="accountHolder2"></td>
+            <td><input type="text" name="accountNumber2"></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="vendor3"></td>
+            <td><input type="text" name="description3"></td>
+            <td><input type="number" name="amount3" class="amount" min="0" step="1"></td>
+            <td><input type="text" name="accountHolder3"></td>
+            <td><input type="text" name="accountNumber3"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="total-box">합계 금액: ₩ <span id="totalAmount">0</span></div>
+
+      <div class="section-title">기타 사항</div>
+      <table>
+        <tr>
+          <th>기타사항</th>
+          <td><textarea name="etc"></textarea></td>
+        </tr>
+      </table>
+
+      <div class="submit-area">
+        <button type="submit" id="submitBtn">제출하기</button>
+        <div class="message" id="message"></div>
+        <div class="small">제출 후 2~3초 뒤 시트에 새 행이 생기는지 확인해주세요.</div>
+      </div>
+    </form>
+
+    <iframe name="hiddenFrame" style="display:none;"></iframe>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec";
+
+    const form = document.getElementById("expenseForm");
+    const message = document.getElementById("message");
+    const submitBtn = document.getElementById("submitBtn");
+    const amountInputs = document.querySelectorAll(".amount");
+    const totalAmountEl = document.getElementById("totalAmount");
+
+    form.action = SCRIPT_URL;
+
+    function formatNumber(num) {
+      return Number(num || 0).toLocaleString("ko-KR");
+    }
+
+    function updateTotal() {
+      let total = 0;
+      amountInputs.forEach(input => {
+        total += Number(input.value || 0);
+      });
+      totalAmountEl.textContent = formatNumber(total);
+    }
+
+    amountInputs.forEach(input => {
+      input.addEventListener("input", updateTotal);
+    });
+
+    form.addEventListener("submit", function (e) {
+      if (SCRIPT_URL.includes("여기에_네_exec_URL_붙여넣기")) {
+        e.preventDefault();
+        message.style.color = "red";
+        message.textContent = "웹앱 URL을 먼저 넣어줘.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      message.style.color = "#111";
+      message.textContent = "제출 중...";
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        message.style.color = "green";
+        message.textContent = "제출 요청 완료.";
+        form.reset();
+        updateTotal();
+      }, 2000);
+    });
+
+    updateTotal();
+  </script>
+</body>
+</html>
