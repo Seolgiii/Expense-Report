@@ -74,6 +74,9 @@
     .field-span-2 { grid-column: span 2; }
     .label { font-size: 15px; font-weight: 700; color: var(--text); }
     .help { font-size: 12px; color: var(--muted); margin-top: -2px; }
+    
+    /* [추가됨] 필수 항목 빨간 별표 스타일 */
+    .required { color: red; margin-left: 3px; font-weight: bold; }
 
     input, select, textarea, button {
       font-family: inherit;
@@ -100,6 +103,9 @@
 
     input[readonly] { background: #f9fafb; color: #374151; cursor: default; }
     textarea { min-height: 150px; resize: vertical; }
+    
+    /* 파일 첨부 스타일 보정 */
+    input[type="file"] { padding: 12px 16px; font-size: 14px; cursor: pointer; }
 
     .detail-rows { display: flex; flex-direction: column; gap: 16px; }
     .detail-card {
@@ -142,6 +148,13 @@
       font-size: 18px;
       font-weight: 800;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    /* [추가됨] 로딩 상태 버튼 스타일 */
+    .submit-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
     }
 
     .guide { margin-top: 8px; text-align: center; font-size: 12px; color: var(--muted); }
@@ -178,7 +191,7 @@
     <div class="paper">
       <h1 class="title">지출결의서</h1>
 
-      <form action="https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec" method="POST">
+      <form id="expenseForm">
         <div class="section">
           <h2 class="section-title">기본 정보</h2>
 
@@ -190,17 +203,17 @@
             </div>
 
             <div class="field">
-              <label class="label" for="payDate">지출일</label>
+              <label class="label" for="payDate">지출일 <span class="required">*</span></label>
               <input type="date" id="payDate" name="지출일" required>
             </div>
 
             <div class="field">
-              <label class="label" for="applicant">신청자</label>
+              <label class="label" for="applicant">신청자 <span class="required">*</span></label>
               <input type="text" id="applicant" name="신청자" required>
             </div>
 
             <div class="field">
-              <label class="label" for="department">소속</label>
+              <label class="label" for="department">소속 <span class="required">*</span></label>
               <select id="department" name="소속" required>
                 <option value="">선택</option>
                 <option value="한라에스앤에프">한라에스앤에프</option>
@@ -209,8 +222,8 @@
             </div>
 
             <div class="field">
-              <label class="label" for="position">직급</label>
-              <input type="text" id="position" name="직급">
+              <label class="label" for="position">직급 <span class="required">*</span></label>
+              <input type="text" id="position" name="직급" required>
             </div>
 
             <div class="field">
@@ -219,13 +232,13 @@
             </div>
 
             <div class="field field-span-2">
-              <label class="label" for="title">건명</label>
+              <label class="label" for="title">건명 <span class="required">*</span></label>
               <input type="text" id="title" name="건명" required>
             </div>
 
             <div class="field">
-              <label class="label" for="corporateCard">법인카드 사용 여부</label>
-              <select id="corporateCard" name="법인카드사용여부">
+              <label class="label" for="corporateCard">법인카드 사용 여부 <span class="required">*</span></label>
+              <select id="corporateCard" name="법인카드사용여부" required>
                 <option value="">선택</option>
                 <option value="유">유</option>
                 <option value="무">무</option>
@@ -239,19 +252,19 @@
 
           <div class="detail-rows">
             <div class="detail-card">
-              <h3 class="detail-card-title">1행</h3>
+              <h3 class="detail-card-title">1행 (필수)</h3>
               <div class="detail-grid">
                 <div class="field">
-                  <label class="label" for="vendor1">사용처</label>
-                  <input type="text" id="vendor1" name="사용처1">
+                  <label class="label" for="vendor1">사용처 <span class="required">*</span></label>
+                  <input type="text" id="vendor1" name="사용처1" required>
                 </div>
                 <div class="field">
-                  <label class="label" for="description1">적요</label>
-                  <input type="text" id="description1" name="적요1">
+                  <label class="label" for="description1">적요 <span class="required">*</span></label>
+                  <input type="text" id="description1" name="적요1" required>
                 </div>
                 <div class="field">
-                  <label class="label" for="amount1">금액</label>
-                  <input type="number" id="amount1" name="금액1" class="amount" min="0" step="1" inputmode="numeric">
+                  <label class="label" for="amount1">금액 <span class="required">*</span></label>
+                  <input type="number" id="amount1" name="금액1" class="amount" min="0" step="1" inputmode="numeric" required>
                 </div>
                 <div class="field">
                   <label class="label" for="accountHolder1">은행명</label>
@@ -265,7 +278,7 @@
             </div>
 
             <div class="detail-card">
-              <h3 class="detail-card-title">2행</h3>
+              <h3 class="detail-card-title">2행 (선택)</h3>
               <div class="detail-grid">
                 <div class="field">
                   <label class="label" for="vendor2">사용처</label>
@@ -291,7 +304,7 @@
             </div>
 
             <div class="detail-card">
-              <h3 class="detail-card-title">3행</h3>
+              <h3 class="detail-card-title">3행 (선택)</h3>
               <div class="detail-grid">
                 <div class="field">
                   <label class="label" for="vendor3">사용처</label>
@@ -325,24 +338,32 @@
         </div>
 
         <div class="section">
-          <h2 class="section-title">비고</h2>
+          <h2 class="section-title">비고 및 영수증</h2>
           <div class="field">
+            <label class="label" for="etc">비고</label>
             <textarea name="비고" id="etc" placeholder="필요한 내용을 입력해 주세요."></textarea>
+          </div>
+          
+          <div class="field" style="margin-top: 16px;">
+            <label class="label" for="receiptFile">영수증 파일 첨부 (이미지 또는 PDF)</label>
+            <input type="file" id="receiptFile" accept="image/*,application/pdf">
+            <div class="help">최대 3MB 이하의 파일만 업로드 가능합니다.</div>
           </div>
         </div>
 
         <div class="submit-area">
-          <button type="submit" class="submit-btn">제출</button>
-          <div class="guide">제출 후 접수 완료 페이지가 뜨면 정상입니다.</div>
+          <button type="submit" class="submit-btn" id="submitBtn">결의서 제출</button>
+          <div class="guide" id="guideText">제출 후 접수 완료 알림이 뜰 때까지 기다려주세요.</div>
         </div>
       </form>
     </div>
   </div>
 
   <script>
+    // 기존 로직 유지
     const amountInputs = document.querySelectorAll(".amount");
     const totalAmountEl = document.getElementById("totalAmount");
-    const hiddenTotalAmountEl = document.getElementById("hiddenTotalAmount"); // 숨김 필드 요소 가져오기
+    const hiddenTotalAmountEl = document.getElementById("hiddenTotalAmount");
     const writeDateInput = document.getElementById("writeDate");
 
     function getTodayLocalDate() {
@@ -366,7 +387,7 @@
         total += Number(input.value || 0);
       });
       totalAmountEl.textContent = formatNumber(total);
-      hiddenTotalAmountEl.value = total; // 계산된 총액을 숨김 필드에 업데이트하여 폼 전송 시 포함되게 함
+      hiddenTotalAmountEl.value = total;
     }
 
     amountInputs.forEach((input) => {
@@ -375,6 +396,78 @@
 
     setTodayWriteDate();
     updateTotal();
+
+    // =========================================================================
+    // [추가됨] 서버로 데이터를 비동기(Fetch) 전송하는 로직 (파일 첨부 포함)
+    // =========================================================================
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec';
+
+    document.getElementById('expenseForm').addEventListener('submit', function(e) {
+      e.preventDefault(); 
+      
+      const fileInput = document.getElementById('receiptFile');
+      if (fileInput.files.length > 0) {
+        const fileSize = fileInput.files[0].size / 1024 / 1024; // MB 단위
+        if (fileSize > 3) {
+          alert('❌ 파일 용량이 너무 큽니다. 3MB 이하의 파일만 첨부해 주세요.');
+          return;
+        }
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      const guideText = document.getElementById('guideText');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '처리 중입니다... 잠시만 기다려주세요';
+      guideText.textContent = '영수증 첨부 시 수 초가 소요될 수 있습니다.';
+
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          data.fileData = e.target.result.split(',')[1]; 
+          data.fileName = file.name;
+          data.fileMimeType = file.type;
+          sendDataToGoogle(data);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        sendDataToGoogle(data);
+      }
+    });
+
+    function sendDataToGoogle(dataPayload) {
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' }, 
+        body: JSON.stringify(dataPayload)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status === 'success') {
+          alert('✅ 제출이 완료되었습니다.\n접수번호: ' + result.receiptNo);
+          window.location.reload(); 
+        } else {
+          alert('❌ 서버 오류 발생: ' + result.message);
+          resetButton();
+        }
+      })
+      .catch(error => {
+        alert('❌ 통신 오류가 발생했습니다. 인터넷 연결을 확인해 주세요.');
+        resetButton();
+      });
+    }
+
+    function resetButton() {
+      const submitBtn = document.getElementById('submitBtn');
+      const guideText = document.getElementById('guideText');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '결의서 제출';
+      guideText.textContent = '제출 후 접수 완료 알림이 뜰 때까지 기다려주세요.';
+    }
   </script>
 </body>
 </html>
