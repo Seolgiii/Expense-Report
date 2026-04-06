@@ -75,7 +75,6 @@
     .label { font-size: 15px; font-weight: 700; color: var(--text); }
     .help { font-size: 12px; color: var(--muted); margin-top: -2px; }
     
-    /* [추가됨] 필수 항목 빨간 별표 스타일 */
     .required { color: red; margin-left: 3px; font-weight: bold; }
 
     input, select, textarea, button {
@@ -104,7 +103,6 @@
     input[readonly] { background: #f9fafb; color: #374151; cursor: default; }
     textarea { min-height: 150px; resize: vertical; }
     
-    /* 파일 첨부 스타일 보정 */
     input[type="file"] { padding: 12px 16px; font-size: 14px; cursor: pointer; }
 
     .detail-rows { display: flex; flex-direction: column; gap: 16px; }
@@ -151,7 +149,6 @@
       transition: background 0.2s;
     }
     
-    /* [추가됨] 로딩 상태 버튼 스타일 */
     .submit-btn:disabled {
       background: #9ca3af;
       cursor: not-allowed;
@@ -170,19 +167,6 @@
       .detail-grid .field:last-child { grid-column: span 2; }
       .total-box { flex-direction: column; align-items: flex-start; }
       .total-value { font-size: 24px; }
-    }
-
-    @media (max-width: 520px) {
-      .page { padding: 12px 10px 30px; }
-      .paper { padding: 18px 12px; }
-      .title { font-size: 28px; letter-spacing: 0.1em; }
-      .section-title { font-size: 18px; }
-      .label { font-size: 14px; }
-      input, select, textarea { min-height: 50px; padding: 13px 14px; font-size: 16px; }
-      .detail-card { padding: 14px; }
-      .detail-grid { grid-template-columns: 1fr; }
-      .detail-grid .field:last-child { grid-column: span 1; }
-      .submit-btn { min-height: 54px; font-size: 17px; }
     }
   </style>
 </head>
@@ -276,56 +260,24 @@
                 </div>
               </div>
             </div>
-
             <div class="detail-card">
               <h3 class="detail-card-title">2행 (선택)</h3>
               <div class="detail-grid">
-                <div class="field">
-                  <label class="label" for="vendor2">사용처</label>
-                  <input type="text" id="vendor2" name="사용처2">
-                </div>
-                <div class="field">
-                  <label class="label" for="description2">적요</label>
-                  <input type="text" id="description2" name="적요2">
-                </div>
-                <div class="field">
-                  <label class="label" for="amount2">금액</label>
-                  <input type="number" id="amount2" name="금액2" class="amount" min="0" step="1" inputmode="numeric">
-                </div>
-                <div class="field">
-                  <label class="label" for="accountHolder2">은행명</label>
-                  <input type="text" id="accountHolder2" name="은행명2">
-                </div>
-                <div class="field">
-                  <label class="label" for="accountNumber2">계좌번호</label>
-                  <input type="text" id="accountNumber2" name="계좌번호2">
-                </div>
+                <div class="field"><label class="label">사용처</label><input type="text" name="사용처2"></div>
+                <div class="field"><label class="label">적요</label><input type="text" name="적요2"></div>
+                <div class="field"><label class="label">금액</label><input type="number" name="금액2" class="amount"></div>
+                <div class="field"><label class="label">은행명</label><input type="text" name="은행명2"></div>
+                <div class="field"><label class="label">계좌번호</label><input type="text" name="계좌번호2"></div>
               </div>
             </div>
-
             <div class="detail-card">
               <h3 class="detail-card-title">3행 (선택)</h3>
               <div class="detail-grid">
-                <div class="field">
-                  <label class="label" for="vendor3">사용처</label>
-                  <input type="text" id="vendor3" name="사용처3">
-                </div>
-                <div class="field">
-                  <label class="label" for="description3">적요</label>
-                  <input type="text" id="description3" name="적요3">
-                </div>
-                <div class="field">
-                  <label class="label" for="amount3">금액</label>
-                  <input type="number" id="amount3" name="금액3" class="amount" min="0" step="1" inputmode="numeric">
-                </div>
-                <div class="field">
-                  <label class="label" for="accountHolder3">은행명</label>
-                  <input type="text" id="accountHolder3" name="은행명3">
-                </div>
-                <div class="field">
-                  <label class="label" for="accountNumber3">계좌번호</label>
-                  <input type="text" id="accountNumber3" name="계좌번호3">
-                </div>
+                <div class="field"><label class="label">사용처</label><input type="text" name="사용처3"></div>
+                <div class="field"><label class="label">적요</label><input type="text" name="적요3"></div>
+                <div class="field"><label class="label">금액</label><input type="number" name="금액3" class="amount"></div>
+                <div class="field"><label class="label">은행명</label><input type="text" name="은행명3"></div>
+                <div class="field"><label class="label">계좌번호</label><input type="text" name="계좌번호3"></div>
               </div>
             </div>
           </div>
@@ -360,7 +312,6 @@
   </div>
 
   <script>
-    // 기존 로직 유지
     const amountInputs = document.querySelectorAll(".amount");
     const totalAmountEl = document.getElementById("totalAmount");
     const hiddenTotalAmountEl = document.getElementById("hiddenTotalAmount");
@@ -397,17 +348,15 @@
     setTodayWriteDate();
     updateTotal();
 
-    // =========================================================================
-    // [추가됨] 서버로 데이터를 비동기(Fetch) 전송하는 로직 (파일 첨부 포함)
-    // =========================================================================
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxse8jrIKtP43dxuO7tfXBZr1fpNXeKCFNpJ6EKdT6zBBKb12B-OwUdzBvR17_KqUuh7w/exec';
+    // [중요] 새로 배포하신 URL을 변수에 적용했습니다.
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFXCReo4C79C4KN-neH12SUJHP4WpTN4XRa3SXcphPTWLvJvTRL4Iknzwow8dObx2PcQ/exec';
 
     document.getElementById('expenseForm').addEventListener('submit', function(e) {
       e.preventDefault(); 
       
       const fileInput = document.getElementById('receiptFile');
       if (fileInput.files.length > 0) {
-        const fileSize = fileInput.files[0].size / 1024 / 1024; // MB 단위
+        const fileSize = fileInput.files[0].size / 1024 / 1024;
         if (fileSize > 3) {
           alert('❌ 파일 용량이 너무 큽니다. 3MB 이하의 파일만 첨부해 주세요.');
           return;
@@ -446,9 +395,8 @@
         body: JSON.stringify(dataPayload)
       })
       .then(response => response.json())
-.then(result => {
+      .then(result => {
         if(result.status === 'success') {
-          // 알림창(alert) 대신 화면 전체를 선생님의 디자인에 맞춘 성공 화면으로 바꿔치기합니다.
           document.body.innerHTML = `
             <div class="page" style="text-align: center; margin-top: 10vh;">
               <div class="paper" style="padding: 60px 20px;">
@@ -462,7 +410,7 @@
               </div>
             </div>
           `;
-          window.scrollTo(0, 0); // 화면을 맨 위로 올려줍니다.
+          window.scrollTo(0, 0);
         } else {
           alert('❌ 서버 오류 발생: ' + result.message);
           resetButton();
