@@ -446,10 +446,23 @@
         body: JSON.stringify(dataPayload)
       })
       .then(response => response.json())
-      .then(result => {
+.then(result => {
         if(result.status === 'success') {
-          alert('✅ 제출이 완료되었습니다.\n접수번호: ' + result.receiptNo);
-          window.location.reload(); 
+          // 알림창(alert) 대신 화면 전체를 선생님의 디자인에 맞춘 성공 화면으로 바꿔치기합니다.
+          document.body.innerHTML = `
+            <div class="page" style="text-align: center; margin-top: 10vh;">
+              <div class="paper" style="padding: 60px 20px;">
+                <h2 style="font-size: 34px; color: #111827; margin-bottom: 20px;">✅ 제출 완료</h2>
+                <p style="font-size: 18px; color: #6b7280;">접수번호: <b style="color: #111827;">` + result.receiptNo + `</b></p>
+                <p style="font-size: 16px; color: #6b7280; margin-bottom: 40px; line-height: 1.6;">
+                  지출결의서가 정상적으로 접수되었습니다.<br>
+                  관리자에게 확인 이메일이 발송되었습니다.
+                </p>
+                <button onclick="window.location.reload()" style="background: #111827; color: #fff; border: none; padding: 16px 32px; border-radius: 16px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.2s;">새 결의서 작성하기</button>
+              </div>
+            </div>
+          `;
+          window.scrollTo(0, 0); // 화면을 맨 위로 올려줍니다.
         } else {
           alert('❌ 서버 오류 발생: ' + result.message);
           resetButton();
